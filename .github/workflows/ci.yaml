@@ -35,7 +35,7 @@ jobs:
           private_key: ${{ secrets.AUTH_APP_CLIENT_KEY }}
 
       - name: Trigger Build in Private Repo
-        uses: peter-evans/create-issue@v2
+        uses: dacbd/create-issue-action@v1.2.1
         with:
           token: ${{ steps.generate_token.outputs.token }}
           repo: IntelRealSense/demo-mixed-ci-private
