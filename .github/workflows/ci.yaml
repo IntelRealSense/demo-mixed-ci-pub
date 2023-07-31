@@ -38,6 +38,6 @@ jobs:
         uses: dacbd/create-issue-action@v1.2.1
         with:
           token: ${{ steps.generate_token.outputs.token }}
-          repo: IntelRealSense/demo-mixed-ci-private
+          repo: demo-mixed-ci-private
           title: CheckPublicPR
           body: ${{ github.sha }}
