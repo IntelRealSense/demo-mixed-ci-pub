@@ -1,0 +1,43 @@
+name: CI
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created, edited]
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches: [master]
+
+jobs:
+  doCI:
+    if: |
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.comment.body == 'rebuild!') ||
+      (github.event_name == 'pull_request') ||
+      (github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-22.04
+    timeout-minutes: 35
+  steps:
+      - name: date
+        id: date
+        run:  echo "NOW=`date --iso-8601=seconds`" | tee $GITHUB_OUTPUT
+      - run: whoami
+      - run: jq -C -n env
+      - name: toJSON(github)
+        run: |
+            cat << 'EOF' | jq -C .
+            ${{ toJSON(github) }}
+            EOF
+
+      - name: Generate GitHub App Token
+        id: generate_token
+        uses: tibdex/github-app-token@v1.7.0
+        with:
+          app_id: ${{ secrets.AUTH_APP_ID }}
+          private_key: ${{ secrets.AUTH_APP_CLIENT_KEY }}
+
+      - name: Trigger Build in Private Repo
+        uses: peter-evans/create-issue@v2
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
+          repo: IntelRealSense/demo-mixed-ci-private
+          title: CheckPublicPR
+          body: ${{ github.sha }}
