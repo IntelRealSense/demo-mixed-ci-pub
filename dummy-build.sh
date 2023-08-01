@@ -2,4 +2,4 @@
 
 set -e
 
-echo "hello qqq!"
+echo "hello zzz!"
