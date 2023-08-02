@@ -16,17 +16,6 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 35
     steps:
-      - name: date
-        id: date
-        run:  echo "NOW=`date --iso-8601=seconds`" | tee $GITHUB_OUTPUT
-      - run: whoami
-      - run: jq -C -n env
-      - name: toJSON(github)
-        run: |
-            cat << 'EOF' | jq -C .
-            ${{ toJSON(github) }}
-            EOF
-
       - name: Generate GitHub App Token
         id: generate_token
         uses: tibdex/github-app-token@v1.7.0
@@ -41,3 +30,11 @@ jobs:
           repo: demo-mixed-ci-private
           title: CheckPublicPR
           body: ${{ github.sha }}
+
+#ToDo:
+# on the rebuild! comment, there's an issue with the sha pointing to something other than pr/merge,
+#     therefore, for 'rebuild!' we need to take the sha from github.event, and not github.sha
+
+#ToDo:
+# when the PR's source is a fork, we don't have access to secrets.
+# this seems to be by design, as in public repos, anyone can create a fork.
