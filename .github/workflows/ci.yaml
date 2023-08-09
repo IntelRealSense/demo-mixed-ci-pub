@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   issue_comment:
     types: [created, edited]
-  pull_request:
+  pull_request_target:
     types: [opened, reopened, synchronize]
     branches: [master]
 
@@ -11,7 +11,7 @@ jobs:
   doCI:
     if: |
       (github.event_name == 'issue_comment' && github.event.issue.pull_request && github.event.comment.body == 'rebuild!') ||
-      (github.event_name == 'pull_request') ||
+      (github.event_name == 'pull_request_target') ||
       (github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-22.04
     timeout-minutes: 35
