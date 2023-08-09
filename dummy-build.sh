@@ -4,6 +4,6 @@ set -e
 
 echo "hello qqq lll!"
 echo "mmm again!!"
-echo "meeeeee"
+echo "meeeeee moooo"
 exit 0
 
