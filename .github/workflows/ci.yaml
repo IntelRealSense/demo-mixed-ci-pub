@@ -23,13 +23,21 @@ jobs:
           app_id: ${{ secrets.AUTH_APP_ID }}
           private_key: ${{ secrets.AUTH_APP_CLIENT_KEY }}
 
+      - uses: actions/checkout@v2
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: Get SHA of PR/merge temporary commit
+        id: get_merge_sha
+        run: echo sha=`git log -1 '--format=format:%H'` | tee $GITHUB_OUTPUT
+
       - name: Trigger Build in Private Repo
         uses: dacbd/create-issue-action@v1.2.1
         with:
           token: ${{ steps.generate_token.outputs.token }}
           repo: demo-mixed-ci-private
           title: CheckPublicPR
-          body: refs/pull/${{ github.event.pull_request.number }}/merge
+          body: ${{ steps.get_merge_sha.outputs.sha }}
 
 #ToDo:
 # on the rebuild! comment, there's an issue with the sha pointing to something other than pr/merge,
