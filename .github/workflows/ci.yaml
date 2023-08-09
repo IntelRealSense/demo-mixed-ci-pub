@@ -20,8 +20,11 @@ jobs:
         id: generate_token
         uses: tibdex/github-app-token@v1.7.0
         with:
-          app_id: ${{ secrets.AUTH_APP_ID }}
-          private_key: ${{ secrets.AUTH_APP_CLIENT_KEY }}
+          # This app is limited to creating issues, so we expose it's key as a variable
+          # this allows the use of this flow with PRs that come from forks
+          # secrets would not allow using forks
+          app_id: ${{ vars.ISSUE_CREATE_APP_ID }}
+          private_key: ${{ vars.ISSUE_CREATE_APP_KEY }}
 
       - name: Trigger Build in Private Repo
         uses: dacbd/create-issue-action@v1.2.1
@@ -34,7 +37,3 @@ jobs:
 #ToDo:
 # on the rebuild! comment, there's an issue with the sha pointing to something other than pr/merge,
 #     therefore, for 'rebuild!' we need to take the sha from github.event, and not github.sha
-
-#ToDo:
-# when the PR's source is a fork, we don't have access to secrets.
-# this seems to be by design, as in public repos, anyone can create a fork.
